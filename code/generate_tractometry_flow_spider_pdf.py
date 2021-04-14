@@ -94,8 +94,7 @@ WM bundles and diffusion MRI metrics. There is two way the tractometry informati
 The second method 'cut' the bundle in section so variation can be observed along the length. The exact steps are described in [1]. This approach is similar to what is presented in [1,2].
 All reported metrics are weighted by streamline density, this way the values of the core/center of bundles are more represented than spurious streamlines and outliers.
 
-Bundle_Metrics_Stats_In_Endpoints/ contains maps for each bundle where the average value along a streamlines are projected to the last points
-for cortical projection visualisation or statistics.
+Bundle_Metrics_Stats_In_Endpoints/ contains maps for each bundle where the average value along a streamlines are projected to the last points for cortical projection visualisation or statistics.
 
 To fully QA the data, we recommand to download the labels map TRK file and inspect them in MI-Brain (https://www.imeka.ca/mi-brain/) 
 """
@@ -121,18 +120,18 @@ pdf.add_page()
 pdf.titles('Tractometry_Flow_V1: {}'.format(sys.argv[1]))
 pdf.add_mosaic('FA plot along bundle ({})'.format(sys.argv[2]),
                ['', ''],
-               ['results_tractometry/{}/Plot_Mean_Std_Per_Point/CC_Fr_2_fa_metric.png'.format(sys.argv[1]),
-                'results_tractometry/{}/Plot_Mean_Std_Per_Point/CC_Pr_Po_fa_metric.png'.format(sys.argv[1])],
+               ['tmp_dict/CC_Fr_2_fa_metric.png'.format(sys.argv[1]),
+                'tmp_dict/CC_Pr_Po_fa_metric.png'.format(sys.argv[1])],
                col=2, pos_x=20, size_x=80, size_y=70)
 pdf.add_mosaic('FA plot along bundle ({})'.format(sys.argv[2]),
                ['', ''],
-               ['results_tractometry/{}/Plot_Mean_Std_Per_Point/AF_L_fa_metric.png'.format(sys.argv[1]),
-                'results_tractometry/{}/Plot_Mean_Std_Per_Point/AF_R_fa_metric.png'.format(sys.argv[1])],
+               ['tmp_dict/AF_L_fa_metric.png'.format(sys.argv[1]),
+                'tmp_dict/AF_R_fa_metric.png'.format(sys.argv[1])],
                col=2, pos_x=20, size_x=80, size_y=70)
 pdf.add_mosaic('FA plot along bundle ({})'.format(sys.argv[2]),
                ['', ''],
-               ['results_tractometry/{}/Plot_Mean_Std_Per_Point/PYT_L_fa_metric.png'.format(sys.argv[1]),
-                'results_tractometry/{}/Plot_Mean_Std_Per_Point/PYT_R_fa_metric.png'.format(sys.argv[1])],
+               ['tmp_dict/PYT_L_fa_metric.png'.format(sys.argv[1]),
+                'tmp_dict/PYT_R_fa_metric.png'.format(sys.argv[1])],
                col=2, pos_x=20, size_x=80, size_y=70)
 
 pdf.add_page()

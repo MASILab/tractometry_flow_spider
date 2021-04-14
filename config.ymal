@@ -1,80 +1,35 @@
 ---
 moreauto: true
 procversion: 1.0.0??
-procname: connectoflow??
+procname: tractometry_flow??
 
 inputs:
   default:
     container_path: ??simg
-
+    nb_pts: 20
   xnat:
     scans:
-      - name: scan_t1
-        types: T1,MPRAGE,T1w,T1_3DAXIAL,MPRAGE_SIEMENS_DEFACED
-        resources:
-          - resource: NIFTI
-            varname: t1_file
-            fmatch: '*'
-            fcount: 1
-            fdest: t1.nii.gz
-            ftype: FILE
     assessors:
-      - name: assr_slant??
-        proctypes: slant_cpu_v1??
+      - name: assr_rbx_flow??
+        proctypes: rbx_flow??
         needs_qc: False
         resources:
-          - resource: SEG
-            fmatch: 'T1_seg.nii.gz'
+          - resource: BUNDLE_TRK
+            fmatch: 'bundles/'
             fcount: 1
-            fdest: labels.nii.gz
-            ftype: FILE
-            varname: label
+            fdest: bundles/
+            ftype: DIR
+            varname: bundles_dir
+          - resource: CENTROID_TRK
+            fmatch: 'centroids/'
+            fcount: 1
+            fdest: centroids/
+            ftype: DIR
+            varname: centroids_dir
       - name: assr_tractoflow
         proctypes: tractoflow_v1.0.0
         needs_qc: False
         resources:
-          - resource: DWI_FILES
-            fmatch: '*__dwi_resampled.nii.gz'
-            fcount: 1
-            fdest: dwi.nii.gz
-            ftype: FILE
-            varname: dwi
-          - resource: DWI_FILES
-            fmatch: '*__dwi.bval'
-            fcount: 1
-            fdest: dwi.bval
-            ftype: FILE
-            varname: bval
-          - resource: DWI_FILES
-            fmatch: '*__dwi.bvec'
-            fcount: 1
-            fdest: dwi.bvec
-            ftype: FILE
-            varname: bvec
-          - resource: FODF_METRICS
-            fmatch: '*__peaks.nii.gz'
-            fcount: 1
-            fdest: peaks.nii.gz
-            ftype: FILE
-            varname: peaks
-          - resource: FODF_METRICS
-            fmatch: '*__fodf.nii.gz'
-            fcount: 1
-            fdest: fodf.nii.gz
-            ftype: FILE
-            varname: fodf
-          - resource: REG_TRANSFORMS
-            fmatch: '*__output0GenericAffine.mat'
-            fcount: 1
-            fdest: output0GenericAffine.mat
-            ftype: FILE
-            varname: affine
-          - resource: REG_TRANSFORMS
-            fmatch: '*__output1Warp.nii.gz'
-            fcount: 1
-            fdest: output1Warp.nii.gz
-            ftype: FILE
-            varname: warp
           - resource: DTI_METRICS
             fmatch: '*__fa.nii.gz'
             fcount: 1
@@ -123,12 +78,6 @@ inputs:
             fdest: metrics_afd_total.nii.gz
             ftype: FILE
             varname: afd_total
-          - resource: DWI_TRK
-            fmatch: '*__ensemble.trk'
-            fcount: 1
-            fdest: ensemble_tracking.trk
-            ftype: FILE
-            varname: ensemble_tracking
     attrs:
       - varname: project
         object: session
@@ -146,30 +95,18 @@ outputs:
   - path: 'report.html'
     type: FILE
     resource: REPORT
-  - path: 'mni_icbm152_nlin_asym_09c_t1_masked.nii.gz'
-    type: FILE
-    resource: TEMPLATE
-  - path: '*__labels_warped_mni_int16.nii.gz'
-    type: FILE
-    resource: REG_IMAGES
-  - path: 't1_mni.nii.gz'
-    type: FILE
-    resource: REG_IMAGES
-  - path: '*__output0GenericAffine.mat'
-    type: FILE
-    resource: REG_TRANSFORMS
-  - path: '*__output1InverseWarp.nii.gz'
-    type: FILE
-    resource: REG_TRANSFORMS
-  - path: '*__output1Warp.nii.gz'
-    type: FILE
-    resource: REG_TRANSFORMS
-  - path: '*__decompose_warped_mni.h5'
-    type: FILE
-    resource: DECOMPOSED_TRK
-  - path: 'connectivity_matrices/'
+  - path: 'stats_xlsx/'
     type: DIR
-    resource: CONNECTIVITY_MATRICES
+    resource: STATS
+  - path: 'stats_json/'
+    type: DIR
+    resource: STATS
+  - path: 'labels_maps/'
+    type: DIR
+    resource: LABELS
+  - path: 'bundle_endpoints_metrics/'
+    type: DIR
+    resource: ENDPOINTS_METRICS
 
 command: >-
   singularity run
@@ -183,20 +120,13 @@ command: >-
   {container_path}
   {subject}
   {session}
-  {dwi}
-  {bval}
-  {bvec}
-  {peaks}
-  {fodf}
-  {affine}
-  {warp}
-  {ensemble_tracking}
-  {t1_file}
-  {labels}
+  {bundles_dir}
+  {centroids_dir}
+  {nb_pts}
 attrs:
   xsitype: proc:genProcData
-  walltime: "72:00:00"
-  memory: 16384
+  walltime: "06:00:00"
+  memory: 4096
   ppn: 1
 
 jobtemplate: job_template.txt
