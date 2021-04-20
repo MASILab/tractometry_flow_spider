@@ -17,9 +17,11 @@ import argparse
 import logging
 import os
 
+from dipy.align.imaffine import AffineMap
 from dipy.io.stateful_tractogram import Space, StatefulTractogram
 from dipy.io.streamline import load_tractogram
 from dipy.tracking.streamline import transform_streamlines
+
 from fury import actor, window
 import matplotlib.pyplot as plt
 import nibabel as nib
@@ -34,6 +36,7 @@ from scilpy.io.utils import (add_overwrite_arg,
                              assert_outputs_exist,
                              snapshot)
 from scilpy.utils.image import register_image
+
 
 def _build_arg_parser():
     p = argparse.ArgumentParser(
@@ -75,6 +78,7 @@ def _build_arg_parser():
 
     return p
 
+
 def display_slices(volume_actor, slices,
                    output_filename, axis_name,
                    view_position, focal_point,
@@ -109,6 +113,7 @@ def display_slices(volume_actor, slices,
 
     snapshot(scene, output_filename, size=(750, 500), offscreen=True)
 
+
 def prepare_data_for_actors(bundle_filename, reference_filename, coloring_filename,
                             target_template_filename):
     sft = load_tractogram(bundle_filename, reference_filename)
@@ -118,8 +123,6 @@ def prepare_data_for_actors(bundle_filename, reference_filename, coloring_filena
     reference_img = nib.load(reference_filename)
     reference_data = reference_img.get_fdata(dtype=np.float32)
     coloring_img = nib.load(coloring_filename)
-    coloring_data = coloring_img.get_fdata(dtype=np.float32)
-    reference_data[coloring_data > 0] = coloring_data[coloring_data > 0]
     reference_affine = reference_img.affine
 
     if target_template_filename:
@@ -129,10 +132,13 @@ def prepare_data_for_actors(bundle_filename, reference_filename, coloring_filena
 
         # Register the DWI data to the template
         logging.debug('Starting registration...')
-        transformed_reference, transformation = register_image(target_template_data,
-                                                               target_template_affine,
-                                                               reference_data,
-                                                               reference_affine)
+        _, transformation = register_image(target_template_data,
+                                           target_template_affine,
+                                           reference_data,
+                                           reference_affine)
+        transformed_reference = AffineMap(transformation,
+                                          target_template_data.shape[0:3], target_template_affine,
+                                          reference_data.shape[0:3], reference_affine)
         logging.debug('Transforming streamlines...')
         streamlines = transform_streamlines(streamlines,
                                             np.linalg.inv(transformation),

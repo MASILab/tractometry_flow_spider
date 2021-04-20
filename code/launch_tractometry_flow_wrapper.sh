@@ -4,15 +4,13 @@ IN_DIR=${1}
 OUT_DIR=${2}
 N_SUBJ=${3}
 N_SESS=${4}
-IN_BUNDLES=${5}
-IN_CENTROIDS=${6}
-NB_PTS=${7}
+NB_PTS=${5}
 
 # Prepare input for Tractometry Flow
 cd /TMP/
-mkdir raw/${N_SUBJ}_${N_SESS}/metrics/ -p
-cp ${IN_DIR}/${IN_BUNDLES} raw/${N_SUBJ}_${N_SESS}/ -r
-cp ${IN_DIR}/${IN_CENTROIDS} raw/${N_SUBJ}_${N_SESS}/ -r
+mkdir raw/${N_SUBJ}_${N_SESS}/metrics/ raw/${N_SUBJ}_${N_SESS}/bundles/ raw/${N_SUBJ}_${N_SESS}/centroids/ -p
+cp ${IN_DIR}/*_cleaned.trk raw/${N_SUBJ}_${N_SESS}/bundles/ -r
+cp ${IN_DIR}/*_centroid.trk raw/${N_SUBJ}_${N_SESS}/centroids/ -r
 for i in ${IN_DIR}/metrics_*.nii.gz; do base_name=$(basename $i); cp ${i} raw/${N_SUBJ}_${N_SESS}/metrics/${base_name/metrics_/}; done
 
 # Launch pipeline

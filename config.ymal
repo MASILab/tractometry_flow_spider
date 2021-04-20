@@ -15,15 +15,13 @@ inputs:
         needs_qc: False
         resources:
           - resource: BUNDLE_TRK
-            fmatch: 'bundles/'
+            fmatch: '*'
             fcount: 1
-            fdest: bundles/
             ftype: DIR
             varname: bundles_dir
           - resource: CENTROID_TRK
-            fmatch: 'centroids/'
+            fmatch: '*'
             fcount: 1
-            fdest: centroids/
             ftype: DIR
             varname: centroids_dir
       - name: assr_tractoflow
@@ -125,7 +123,7 @@ command: >-
   {nb_pts}
 attrs:
   xsitype: proc:genProcData
-  walltime: "06:00:00"
+  walltime: "03:00:00"
   memory: 4096
   ppn: 1
 
