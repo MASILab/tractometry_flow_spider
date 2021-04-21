@@ -15,14 +15,14 @@ inputs:
         needs_qc: False
         resources:
           - resource: BUNDLE_TRK
-            fmatch: '*'
             fcount: 1
             ftype: DIR
+            fdest: bundles_dir
             varname: bundles_dir
           - resource: CENTROID_TRK
-            fmatch: '*'
             fcount: 1
             ftype: DIR
+            fdest: centroids_dir
             varname: centroids_dir
       - name: assr_tractoflow
         proctypes: tractoflow_v1.0.0

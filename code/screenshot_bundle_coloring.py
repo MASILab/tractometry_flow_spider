@@ -136,9 +136,11 @@ def prepare_data_for_actors(bundle_filename, reference_filename, coloring_filena
                                            target_template_affine,
                                            reference_data,
                                            reference_affine)
-        transformed_reference = AffineMap(transformation,
-                                          target_template_data.shape[0:3], target_template_affine,
-                                          reference_data.shape[0:3], reference_affine)
+        affine_map = AffineMap(transformation,
+                               target_template_data.shape[0:3], target_template_affine,
+                               reference_data.shape[0:3], reference_affine)
+        transformed_reference = affine_map.transform(coloring_img.get_fdata(dtype=np.float64), interpolation='linear')
+
         logging.debug('Transforming streamlines...')
         streamlines = transform_streamlines(streamlines,
                                             np.linalg.inv(transformation),
