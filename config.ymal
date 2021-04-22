@@ -1,31 +1,30 @@
 ---
 moreauto: true
-procversion: 1.0.0??
-procname: tractometry_flow??
+procversion: 1.0.0
+procname: tractometry_flow
 
 inputs:
   default:
-    container_path: ??simg
+    container_path: tractometry_flow_v1.0.0.simg
     nb_pts: 20
   xnat:
-    scans:
     assessors:
-      - name: assr_rbx_flow??
-        proctypes: rbx_flow??
+      - name: assr_rbx_flow
+        proctypes: rbx_flow_v1
         needs_qc: False
         resources:
           - resource: BUNDLE_TRK
             fcount: 1
-            ftype: DIR
+            ftype: DIRJ
             fdest: bundles_dir
             varname: bundles_dir
           - resource: CENTROID_TRK
             fcount: 1
-            ftype: DIR
+            ftype: DIRJ
             fdest: centroids_dir
             varname: centroids_dir
       - name: assr_tractoflow
-        proctypes: tractoflow_v1.0.0
+        proctypes: tractoflow_v1
         needs_qc: False
         resources:
           - resource: DTI_METRICS
@@ -109,12 +108,12 @@ outputs:
 command: >-
   singularity run
   --home $JOBDIR
+  --bind $JOBDIR:/tmp
   --containall
   --cleanenv
   --bind $INDIR:/INPUTS
   --bind  $OUTDIR:/OUTPUTS
   --bind $JOBDIR:/TMP
-  --bind $JOBDIR:/tmp
   {container_path}
   {subject}
   {session}
@@ -123,7 +122,7 @@ command: >-
   {nb_pts}
 attrs:
   xsitype: proc:genProcData
-  walltime: "12:00:00"
+  walltime: "03:00:00"
   memory: 4096
   ppn: 1
 
